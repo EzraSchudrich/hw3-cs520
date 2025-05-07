@@ -28,6 +28,12 @@ public class ExpenseTrackerView extends JFrame {
   private JTextField indexField;
   private JButton undoTransactionBtn;
 
+  //
+  private JTextField CSVField;
+  private JButton CSVBtn;
+  //
+
+
   private List<Transaction> displayedTransactions = new ArrayList<>(); // ✅ Moved here
 
   public ExpenseTrackerView() {
@@ -58,6 +64,12 @@ public class ExpenseTrackerView extends JFrame {
 
     clearFilterBtn = new JButton("Clear Filter");
 
+    // csv stuff
+    JLabel CSVButtonLabel = new JLabel("Filename:");
+    CSVField = new JTextField(10);
+    CSVBtn = new JButton("Get CSV File");
+    //
+
     JLabel undoLabel = new JLabel("Undo #:");
     indexField = new JTextField(3);
     undoTransactionBtn = new JButton("Undo Transaction");
@@ -69,10 +81,25 @@ public class ExpenseTrackerView extends JFrame {
     inputPanel.add(categoryField);
     inputPanel.add(addTransactionBtn);
 
+    // new format;; create main button panel
     JPanel buttonPanel = new JPanel();
-    buttonPanel.add(amountFilterBtn);
-    buttonPanel.add(categoryFilterBtn);
-    buttonPanel.add(clearFilterBtn);
+    buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS)); 
+
+    // first row
+    JPanel topButtonRow = new JPanel(new FlowLayout());
+    topButtonRow.add(amountFilterBtn);
+    topButtonRow.add(categoryFilterBtn); 
+    topButtonRow.add(clearFilterBtn);
+
+    //second row ts
+    JPanel csvRow = new JPanel(new FlowLayout());
+    csvRow.add(CSVButtonLabel);
+    csvRow.add(CSVField);
+    csvRow.add(CSVBtn);
+
+    buttonPanel.add(topButtonRow);
+    buttonPanel.add(csvRow);
+    //
 
     JPanel undoPanel = new JPanel();
     undoPanel.add(undoLabel);
@@ -95,6 +122,24 @@ public class ExpenseTrackerView extends JFrame {
   public JTable getTransactionsTable() {
     return transactionsTable;
   }
+
+  // csv functions
+  public String getCSVField() {
+    return CSVField.getText();
+  }
+
+  public void setCSVField(JTextField CSVField) {
+    this.CSVField = CSVField;
+  }
+
+  public void addApplyCSVListener(ActionListener listener) {
+    CSVBtn.addActionListener(listener);
+  }
+
+  public JButton getCSVBtn() {
+    return CSVBtn;
+  }
+  //
 
   public double getAmountField() {
     if (amountField.getText().isEmpty()) {

@@ -11,6 +11,9 @@ import model.Filter.TransactionFilter;
 import model.Filter.CategoryFilter;
 import model.Filter.AmountFilter;
 
+import java.io.FileWriter;
+import java.io.IOException;
+
 public class ExpenseTrackerController {
   private ExpenseTrackerModel model;
   private ExpenseTrackerView view;
@@ -91,4 +94,30 @@ public class ExpenseTrackerController {
     view.displayFilteredTransactions(filteredTransactions);
   }
 
+    public boolean pushtoCSVfile(String CSV_target_file) {
+    if(!InputValidation.isValidCSVFile(CSV_target_file)) {
+      return false;
+    }
+
+    List<Transaction> transactions = model.getTransactions();
+    String CSV_FILE_TYPE = ".csv";
+    String target_file = CSV_target_file + CSV_FILE_TYPE;
+    
+    try (FileWriter writer = new FileWriter(target_file)) {
+        // Write headers (column names)
+        writer.append("Amount,Category,Date\n"); //do i need the serial?
+
+        // // Write a sample row
+        // writer.append("2023-10-01,25.50,Food,Lunch\n");
+      for (Transaction t : transactions) {
+        writer.append(t.getAmount() + "," + t.getCategory() + "," + t.getTimestamp() + "\n");
+      }
+
+        System.out.println("CSV file created: " + target_file);
+    } catch (IOException e) {
+        e.printStackTrace();
+    }
+
+    return true;
+  }
 }

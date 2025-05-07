@@ -44,4 +44,22 @@ public class InputValidation {
   
   }
 
+  //new
+  public static boolean isValidCSVFile(String category) {
+
+    if(category == null) {
+      return false; 
+    }
+  
+    if(category.trim().isEmpty()) {
+      return false;
+    }
+
+    if(!category.matches("^[a-zA-Z0-9_\\-]+$")) {
+      return false;
+    }
+  
+    return true; 
+  }
+
 }

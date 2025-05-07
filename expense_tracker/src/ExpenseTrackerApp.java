@@ -54,6 +54,23 @@ public class ExpenseTrackerApp {
    }});
 
 
+    //new stuff with CSV
+    view.getCSVBtn().addActionListener(e -> {
+      // Get transaction data from view
+      String CSV_target_file = view.getCSVField();
+      
+      // Call controller to add transaction
+      controller.pushtoCSVfile(CSV_target_file);
+      boolean added = controller.pushtoCSVfile(CSV_target_file);
+      
+      if (!added) {
+        JOptionPane.showMessageDialog(view, "invalid filename given\n(don't include the .csv)");
+        view.toFront();
+      }
+    });
+    //
+
+
     // Add action listener to the "Apply Amount Filter" button
     view.addApplyAmountFilterListener(e -> {
       try{
