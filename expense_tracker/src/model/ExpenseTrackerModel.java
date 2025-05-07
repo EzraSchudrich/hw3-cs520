@@ -6,15 +6,16 @@ import java.util.List;
 
 public class ExpenseTrackerModel {
 
-  //encapsulation - data integrity
+  // encapsulation - data integrity
   private List<Transaction> transactions;
 
   public ExpenseTrackerModel() {
-    transactions = new ArrayList<>(); 
+    transactions = new ArrayList<>();
   }
 
   public void addTransaction(Transaction t) {
-    // Perform input validation to guarantee that all transactions added are non-null.
+    // Perform input validation to guarantee that all transactions added are
+    // non-null.
     if (t == null) {
       throw new IllegalArgumentException("The new transaction must be non-null.");
     }
@@ -26,8 +27,16 @@ public class ExpenseTrackerModel {
   }
 
   public List<Transaction> getTransactions() {
-    //encapsulation - data integrity
+    // encapsulation - data integrity
     return Collections.unmodifiableList(new ArrayList<>(transactions));
+  }
+
+  // removes a transaction by the index given
+  public void removeTransactionByIndex(int index) {
+    if (index < 0 || index >= transactions.size()) {
+      throw new IndexOutOfBoundsException("Invalid transaction index: " + index);
+    }
+    transactions.remove(index);
   }
 
 }

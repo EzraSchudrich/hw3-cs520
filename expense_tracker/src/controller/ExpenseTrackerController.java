@@ -1,23 +1,22 @@
 package controller;
 
 import view.ExpenseTrackerView;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JOptionPane;
+import java.awt.event.ActionListener;
+import java.util.List;
 
 import model.ExpenseTrackerModel;
 import model.Transaction;
 import model.Filter.TransactionFilter;
+import model.Filter.CategoryFilter;
+import model.Filter.AmountFilter;
 
 public class ExpenseTrackerController {
-  
   private ExpenseTrackerModel model;
   private ExpenseTrackerView view;
-  /** 
+  /**
    * The Controller is applying the Strategy design pattern.
-   * This is the has-a relationship with the Strategy class 
+   * This is the has-a relationship with the Strategy class
    * being used in the applyFilter method.
    */
   private TransactionFilter filter;
@@ -25,6 +24,31 @@ public class ExpenseTrackerController {
   public ExpenseTrackerController(ExpenseTrackerModel model, ExpenseTrackerView view) {
     this.model = model;
     this.view = view;
+    // undo transaction listener
+    view.getRemoveButton().addActionListener(e -> {
+
+      String input = view.getIndexInput().trim();
+      int idx;
+      try {
+        idx = Integer.parseInt(input) - 1; // 0 is first index
+      } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(view,
+            "Please enter a valid transaction number.",
+            "Invalid Input",
+            JOptionPane.ERROR_MESSAGE);
+        return;
+      }
+      try {
+        model.removeTransactionByIndex(idx);
+      } catch (IndexOutOfBoundsException ex) {
+        JOptionPane.showMessageDialog(view,
+            "No transaction at number: " + (idx + 1),
+            "Out of Range",
+            JOptionPane.ERROR_MESSAGE);
+        return;
+      }
+      refresh();
+    });
   }
 
   public void setFilter(TransactionFilter filter) {
@@ -44,10 +68,10 @@ public class ExpenseTrackerController {
     if (!InputValidation.isValidCategory(category)) {
       return false;
     }
-    
+
     Transaction t = new Transaction(amount, category);
     model.addTransaction(t);
-    view.getTableModel().addRow(new Object[]{t.getAmount(), t.getCategory(), t.getTimestamp()});
+    view.getTableModel().addRow(new Object[] { t.getAmount(), t.getCategory(), t.getTimestamp() });
     refresh();
     return true;
   }
@@ -66,5 +90,5 @@ public class ExpenseTrackerController {
     }
     view.displayFilteredTransactions(filteredTransactions);
   }
-    
+
 }
